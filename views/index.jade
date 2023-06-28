@@ -21,6 +21,9 @@ block content
     
         div.space-y-8.py-8
           each project in projects
-              div.p-4.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg
+              div.p-4.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg.flex.justify-between.items-center
+                div.flex.flex-col
                   a(href="/projects/#{project.id}").text-2xl.font-bold.text-gray-800.text-orange-400 #{project.name}
                   p.text-gray-600 #{project.description}
+                div 
+                  p.text-gray-400.text-xs.font-medium #{project.member_count} members

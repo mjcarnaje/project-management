@@ -4,9 +4,41 @@ block content
   div.flex.mx-auto.bg-gray-50.min-h-screen
     div.flex.flex-col.max-w-sm.w-full.shadow-sm.border-r.bg-white
       div.p-4.bg-orange-100.border-r-4.border-orange-400
-        a(href="/").text-3xl.font-bold.text-gray-800.text-orange-400="Projects"
+        a(href="/").text-3xl.font-bold.text-gray-800.text-orange-400 Projects
       div.p-4
-        a(href="/members").text-3xl.font-bold.text-gray-800="Members"
-    div.w-full.px-8.bg-gray-50.py-12
-        div.bg-white.p-8
-          h1.text-3xl.font-bold.text-gray-800.text-orange-400=project.id
+        a(href="/members").text-3xl.font-bold.text-gray-800 Members
+
+    div.w-full.px-8.bg-gray-50.py-12.space-y-8
+      div.bg-white.p-8.flex.justify-between.shadow-sm.rounded-lg
+        h1.text-3xl.font-bold.text-gray-800.text-orange-400 #{project.name}
+        div
+          button(type="button", onclick=`deleteProject(${project.id})`).bg-red-400.px-6.py-3.rounded-lg.text-white.font-bold="Delete"
+
+      div.bg-white.p-8.flex.justify-between.shadow-sm.rounded-lg
+        div.flex.flex-col.gap-4.w-full
+          h1.text-3xl.font-bold.text-gray-800.text-orange-400 Members
+          if (members.length === 0)
+            p.text-gray-400.text-xl.font-medium="No members yet"
+          else
+            each member in members
+              div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
+                a(href=`/members/${member.id}`).text-xl.text-gray-800.text-orange-400 #{member.name}
+                button(type="button", onclick=`removeMember(${project.id}, ${member.id})`).px-4.text-sm.py-2.flex.text-red-500.font-medium="Remove member"
+          button(type="button", onclick=`window.location.href='/projects/${project.id}/members'`).bg-orange-400.px-6.py-3.rounded-lg.text-white.font-bold="Add member"
+
+  script.
+    function deleteProject(id) {
+      if (confirm('Are you sure you want to delete this project?')) {
+        fetch('/delete-project/' + id, {
+          method: 'DELETE'
+        }).then(res => window.location.href = '/')
+      }
+    }
+
+    function removeMember(projectId, memberId) {
+      if (confirm('Are you sure you want to remove this member?')) {
+        fetch('/projects/' + projectId + '/members/' + memberId, {
+          method: 'DELETE'
+        }).then(res => window.location.href = '/projects/' + projectId)
+      }
+    }
