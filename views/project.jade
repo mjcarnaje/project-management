@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  div.flex.mx-auto.bg-gray-50.min-h-screen
+    div.flex.flex-col.max-w-sm.w-full.shadow-sm.border-r.bg-white
+      div.p-4.bg-orange-100.border-r-4.border-orange-400
+        a(href="/").text-3xl.font-bold.text-gray-800.text-orange-400="Projects"
+      div.p-4
+        a(href="/members").text-3xl.font-bold.text-gray-800="Members"
+    div.w-full.px-8.bg-gray-50.py-12
+        div.bg-white.p-8
+          h1.text-3xl.font-bold.text-gray-800.text-orange-400=project.id
