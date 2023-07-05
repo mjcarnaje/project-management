@@ -15,8 +15,7 @@ connection.query(
   name VARCHAR(255),
   description VARCHAR(255),
   date_created DATE DEFAULT (CURRENT_DATE)
-  );
-  `,
+);`,
   function (error, results, fields) {
     if (error) throw error;
     console.log("Created project table if not existed");
@@ -42,7 +41,7 @@ connection.query(
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255),
   description VARCHAR(255),
-  progress_status ENUM('Not Started', 'In Progress', 'Completed')
+  progress_status ENUM('Not Started', 'In Progress', 'Completed'),
   project_id INT NOT NULL,
   FOREIGN KEY (project_id) REFERENCES project (id) 
 );`,
