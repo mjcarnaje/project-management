@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  div.flex.mx-auto.bg-gray-50.min-h-screen
+    div.flex.flex-col.max-w-sm.w-full.shadow-sm.border-r.bg-white
+      div.p-4.bg-orange-100.border-r-4.border-orange-400
+        a(href="/").text-3xl.font-bold.text-gray-800.text-orange-400="Projects"
+      div.p-4
+        a(href="/members").text-3xl.font-bold.text-gray-800="Members"
+    div.w-full.px-8.bg-gray-50.py-12
+        form(action="/add-project", method="POST").space-y-4.p-8.bg-white.shadow-md.border-b-4.border-orange-400.rounded-lg.max-w-xl
+          div.flex.flex-col.space-y-2
+            label(for="name") Name:
+            input(type="text", id="name", name="name", placeholder="Enter project's name").border.border-gray-300.rounded-lg.px-4.py-2
+
+          div.flex.flex-col.space-y-2
+            label(for="description") description:
+            textarea(id="description", name="description", placeholder="Enter project's description").border.border-gray-300.rounded-lg.px-4.py-2
+
+          button(type="submit").bg-orange-400.px-6.py-4.rounded-lg.text-white.font-bold Submit   

@@ -1,0 +1,177 @@
+extends layout
+
+block content
+  div.flex.mx-auto.bg-gray-50.min-h-screen
+    div.flex.flex-col.max-w-sm.w-full.shadow-sm.border-r.bg-white
+      div.p-4.bg-orange-100.border-r-4.border-orange-400
+        a(href="/").text-3xl.font-bold.text-orange-400 Projects
+      div.p-4
+        a(href="/members").text-3xl.font-bold.text-gray-800 Members
+    div.w-full.px-8.bg-gray-50.py-12.max-w-xl
+      h1.text-5xl.font-bold.text-orange-400.mb-8 Edit Task
+      form(onsubmit="addTask(event)", role="form").space-y-4
+        div.bg-white.shadow-sm.rounded-lg.p-8.space-y-5
+          div.flex.flex-col.gap-1
+            label(for="title").block.text-sm.font-medium.text-gray-700 Status
+            select(name="status", id="status").border.border-gray-300.rounded-lg.px-4.py-1.w-full
+              option(value="pending", selected=task.status === 'pending').text-gray-400 Pending
+              option(value="ongoing", selected=task.status === 'ongoing').text-gray-400 Ongoing
+              option(value="completed",selected=task.status === 'completed').text-gray-400 Completed
+
+        div.bg-white.shadow-sm.rounded-lg.p-8.space-y-5
+          div.flex.flex-col.gap-1
+            label(for="title").block.text-sm.font-medium.text-gray-700 Name
+            input(type="text", name="title", id="title", placeholder="Task Name", value=task.title, required).border.border-gray-300.rounded-lg.px-4.py-2.w-full
+
+          div.flex.flex-col.gap-1
+            label(for="description").block.text-sm.font-medium.text-gray-700 Description
+            textarea(name="description", id="description", placeholder="Task Description", required).border.border-gray-300.rounded-lg.px-4.py-2.w-full= task.description
+
+          div.flex.flex-col.gap-1
+            h1.text-sm.font-bold.text-gray-700 Members
+            div.members-container.bg-white.p-4.border.border-gray-300.rounded-lg.grid.grid-cols-2.gap-2
+              h1.text-sm.font-bold.text-gray-700 No Members
+
+            div.flex.flex-col.gap-1
+              select(name="member", id="member").border.border-gray-300.rounded-lg.px-4.py-1.flex-1
+                option(value="").text-gray-400 Select a member
+              button(type="button", onclick="editMember()").bg-green-400.px-4.py-1.rounded-lg.text-white.font-bold Add Member
+              
+          div.flex.flex-col.gap-1
+            label(for="due_date").block.text-sm.font-medium.text-gray-700 Due Date
+            input(type="date", name="due_date", id="due_date", value=task.due_date, required).border.border-gray-300.rounded-lg.px-4.py-2.w-full= task.due_date
+          div
+            button(type="submit").bg-green-400.px-6.py-2.rounded-lg.text-white.font-bold Save changes
+
+  script.
+    var _addedMembers = `!{JSON.stringify(addedMembers)}`;
+    var addedMembers = JSON.parse(_addedMembers);
+    var availableMembers = `!{JSON.stringify(members)}`;
+    var projectId = `#{projectId}`;
+    var taskId = `#{taskId}`;
+
+    function editMember() {
+      const parsedAvailableMembers = JSON.parse(availableMembers);
+
+      const memberId = document.getElementById('member').value;
+      const memberName = document.getElementById('member').options[document.getElementById('member').selectedIndex].text;
+
+      if (parsedAvailableMembers.length === addedMembers.length) {
+        alert('All available members are already added');
+        return;
+      }
+
+      if (memberId === '') {
+        alert('Please select a member');
+        return;
+      }
+
+      addedMembers.push({ id: memberId, name: memberName });
+
+      renderAddedMembers();
+      setMemberOptions();
+    }
+
+ 
+
+    function addTask(e) {
+      e.preventDefault()
+
+      const title = document.getElementById('title').value
+      const description = document.getElementById('description').value
+      const status = document.getElementById('status').value
+      const due_date = document.getElementById('due_date').value
+
+      if (title === '' || description === '' || status === '' || due_date === '') {
+        alert('Please fill in all fields')
+        return
+      }
+
+      if (addedMembers.length === 0) {
+        alert('Please add at least one member')
+        return
+      }
+
+      const members = addedMembers.map(member => member.id)
+
+
+      fetch(`/projects/${projectId}/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          title, description, status, due_date, members })
+      })
+      .then(() => {
+        alert('Task added successfully')
+        window.location.href = `/projects/${projectId}`
+      })
+    }
+
+    function setMemberOptions() {
+      const parsedAvailableMembers = JSON.parse(availableMembers);
+      const filteredMembers = parsedAvailableMembers.filter(member => !addedMembers.find(dataMember => dataMember.id == member.id));
+
+      const memberSelect = document.getElementById('member');
+      memberSelect.innerHTML = '';
+
+      for (const member of filteredMembers) {
+        const option = document.createElement('option');
+        option.value = member.id;
+        option.textContent = member.name;
+        memberSelect.appendChild(option);
+      }
+
+      if (filteredMembers.length === 0) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No Members';
+        memberSelect.appendChild(option);
+      }      
+    }
+
+    function renderAddedMembers() {
+      const membersDiv = document.querySelector('.members-container');
+      membersDiv.innerHTML = ''; // Clear the existing member list
+
+      for (const member of addedMembers) {
+        const memberDiv = document.createElement('div');
+        memberDiv.classList.add('flex', 'gap-4', 'bg-white', 'p-2', 'border', 'border-gray-300', 'rounded-lg');
+
+        const infoDiv = document.createElement('div');
+        infoDiv.classList.add('flex', 'items-center', 'gap-4');
+
+        const memberNameHeading = document.createElement('h1');
+        memberNameHeading.classList.add('text-sm', 'font-bold', 'text-gray-700');
+        memberNameHeading.textContent = member.name;
+
+        const removeButton = document.createElement('button');
+        removeButton.classList.add('bg-red-400', 'px-2', 'py-1', 'rounded-lg', 'text-white', 'font-semibold', 'text-xs');
+        removeButton.textContent = 'Remove';
+        removeButton.addEventListener('click', () => {
+          addedMembers = addedMembers.filter(dataMember => dataMember.id !== member.id);
+          membersDiv.removeChild(memberDiv);
+          setMemberOptions();
+
+          if (addedMembers.length === 0) {
+            const noMembersHeading = document.createElement('h1');
+            noMembersHeading.classList.add('text-sm', 'font-bold', 'text-gray-700');
+            noMembersHeading.textContent = 'No Members';
+
+            membersDiv.appendChild(noMembersHeading);
+          }
+        });
+
+        infoDiv.appendChild(memberNameHeading);
+        infoDiv.appendChild(removeButton);
+
+        memberDiv.appendChild(infoDiv);
+        membersDiv.appendChild(memberDiv);
+      }
+    }
+
+
+    setMemberOptions();
+    renderAddedMembers();
+

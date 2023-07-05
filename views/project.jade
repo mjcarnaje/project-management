@@ -4,27 +4,73 @@ block content
   div.flex.mx-auto.bg-gray-50.min-h-screen
     div.flex.flex-col.max-w-sm.w-full.shadow-sm.border-r.bg-white
       div.p-4.bg-orange-100.border-r-4.border-orange-400
-        a(href="/").text-3xl.font-bold.text-gray-800.text-orange-400 Projects
+        a(href="/").text-3xl.font-bold.text-orange-400 Projects
       div.p-4
         a(href="/members").text-3xl.font-bold.text-gray-800 Members
 
     div.w-full.px-8.bg-gray-50.py-12.space-y-8
       div.bg-white.p-8.flex.justify-between.shadow-sm.rounded-lg
-        h1.text-3xl.font-bold.text-gray-800.text-orange-400 #{project.name}
-        div
+        div.flex-col
+          h1.text-3xl.font-bold.text-orange-400 #{project.name}
+          p.text-gray-600 #{project.description}
+        div.flex.gap-4
+          a(href="/edit-project/" + project.id).bg-orange-400.px-6.py-3.rounded-lg.text-white.font-bold="Edit"
           button(type="button", onclick=`deleteProject(${project.id})`).bg-red-400.px-6.py-3.rounded-lg.text-white.font-bold="Delete"
 
       div.bg-white.p-8.flex.justify-between.shadow-sm.rounded-lg
         div.flex.flex-col.gap-4.w-full
-          h1.text-3xl.font-bold.text-gray-800.text-orange-400 Members
-          if (members.length === 0)
-            p.text-gray-400.text-xl.font-medium="No members yet"
-          else
-            each member in members
-              div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
-                a(href=`/members/${member.id}`).text-xl.text-gray-800.text-orange-400 #{member.name}
-                button(type="button", onclick=`removeMember(${project.id}, ${member.id})`).px-4.text-sm.py-2.flex.text-red-500.font-medium="Remove member"
-          button(type="button", onclick=`window.location.href='/projects/${project.id}/members'`).bg-orange-400.px-6.py-3.rounded-lg.text-white.font-bold="Add member"
+          h1.text-3xl.font-bold.text-orange-400 Members
+          div.grid.grid-cols-3.gap-4
+            if (members.length === 0)
+              p.text-gray-400.text-xl.font-medium="No members yet"
+            else
+              each member in members
+                div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
+                  a(href=`/members/${member.id}`).text-xl.text-orange-400 #{member.name}
+                  button(type="button", onclick=`removeMember(${project.id}, ${member.id})`).px-4.text-sm.py-2.flex.text-red-500.font-medium="Remove member"
+            button(type="button", onclick=`window.location.href='/projects/${project.id}/members'`).bg-orange-400.px-6.py-3.rounded-lg.text-white.font-bold="Add member"
+
+      div.bg-white.p-8.shadow-sm.rounded-lg.space-y-4
+        h1.text-3xl.font-bold.text-orange-400 Tasks
+        if (hasTasks === false)
+          p.text-gray-400.text-xl.font-medium="No tasks yet"
+        else
+          div.flex.justify-between.gap-4
+            div.flex.flex-col.gap-4.border.border-gray-300.p-4.flex-1.rounded-lg
+              h1.text-2xl.font-bold.text-yellow-400 Pending
+              if tasks.pending.length == 0
+                div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
+                  p.text-lg.text-gray-600 No pending tasks
+              each task in tasks.pending
+                div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
+                  p.text-xl.text-orange-400 #{task.title}
+                  div.flex.gap-1.items-center
+                    a(href=`/projects/${project.id}/tasks/${task.id}`).px-4.text-sm.py-2.flex.text-orange-500.font-medium="Edit"
+                    button(type="button", onclick=`deleteTask(${project.id}, ${task.id})`).px-4.text-sm.py-2.flex.text-red-500.font-medium="Delete"
+            div.flex.flex-col.gap-4.border.border-gray-300.p-4.flex-1.rounded-lg
+              h1.text-2xl.font-bold.text-orange-400 Ongoing
+              if tasks.ongoing.length == 0
+                div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
+                  p.text-lg.text-gray-600 No ongoing tasks
+              each task in tasks.ongoing
+                div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
+                  p.text-xl.text-orange-400 #{task.title}
+                  div.flex.gap-1.items-center
+                    a(href=`/projects/${project.id}/tasks/${task.id}`).px-4.text-sm.py-2.flex.text-orange-500.font-medium="Edit"
+                    button(type="button", onclick=`deleteTask(${project.id}, ${task.id})`).px-4.text-sm.py-2.flex.text-red-500.font-medium="Delete"
+            div.flex.flex-col.gap-4.border.border-gray-300.p-4.flex-1.rounded-lg
+              h1.text-2xl.font-bold.text-gray-800.text-green-400 Completed
+              if tasks.completed.length == 0
+                div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
+                  p.text-lg.text-gray-600 No completed tasks
+              each task in tasks.completed
+                div.w-full.border.p-3.flex.justify-between.rounded-lg.items-center
+                  p.text-xl.text-orange-400 #{task.title}
+                  div.flex.gap-1.items-center
+                    a(href=`/projects/${project.id}/tasks/${task.id}`).px-4.text-sm.py-2.flex.text-orange-500.font-medium="Edit"
+                    button(type="button", onclick=`deleteTask(${project.id}, ${task.id})`).px-4.text-sm.py-2.flex.text-red-500.font-medium="Delete"
+              
+        button(type="button", onclick=`window.location.href='/projects/${project.id}/tasks'`).bg-orange-400.px-6.py-3.rounded-lg.text-white.font-bold="Add task"
 
   script.
     function deleteProject(id) {
@@ -41,4 +87,10 @@ block content
           method: 'DELETE'
         }).then(res => window.location.href = '/projects/' + projectId)
       }
+    }
+
+    function deleteTask(projectId, taskId) {
+      fetch('/projects/' + projectId + '/tasks/' + taskId, {
+        method: 'DELETE'
+      }).then(res => window.location.href = '/projects/' + projectId)
     }

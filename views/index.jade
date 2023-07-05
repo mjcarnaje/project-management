@@ -7,23 +7,15 @@ block content
         a(href="/").text-3xl.font-bold.text-gray-800.text-orange-400="Projects"
       div.p-4
         a(href="/members").text-3xl.font-bold.text-gray-800="Members"
+        
     div.w-full.px-8.bg-gray-50.py-12
-        form(action="/", method="POST").space-y-4.p-8.bg-white.shadow-md.border-b-4.border-orange-400.rounded-lg.max-w-xl
-          div.flex.flex-col.space-y-2
-            label(for="name") Name:
-            input(type="text", id="name", name="name", placeholder="Enter project's name").border.border-gray-300.rounded-lg.px-4.py-2
-
-          div.flex.flex-col.space-y-2
-            label(for="description") Description:
-            textarea(id="description", name="description", placeholder="Enter project's description").border.border-gray-300.rounded-lg.px-4.py-2
-
-          button(type="submit").bg-orange-400.px-6.py-4.rounded-lg.text-white.font-bold Submit   
+        a(href="/add-project").bg-orange-400.px-6.py-4.rounded-lg.text-white.font-bold Add Project
     
         div.space-y-8.py-8
           each project in projects
               div.p-4.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg.flex.justify-between.items-center
                 div.flex.flex-col
                   a(href="/projects/#{project.id}").text-2xl.font-bold.text-gray-800.text-orange-400 #{project.name}
-                  p.text-gray-600 #{project.description}
+                  p.text-gray-600 #{project.description || 'No description'}
                 div 
                   p.text-gray-400.text-xs.font-medium #{project.member_count} members
