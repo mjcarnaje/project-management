@@ -127,66 +127,6 @@ router.get("/projects/:id", function (req, res, next) {
   );
 });
 
-router.get("/projects/:id", function (req, res, next) {
-  const data = {
-    project: {},
-    members: [],
-    tasks: {
-      pending: [],
-      ongoing: [],
-      completed: [],
-    },
-    hasTasks: false,
-  };
-
-  connection.query(
-    `SELECT * FROM project WHERE id = ?`,
-    [req.params.id],
-    function (error, results, fields) {
-      if (error) throw error;
-      Object.assign(data.project, results[0]);
-    }
-  );
-
-  connection.query(
-    `SELECT t.id, t.title, t.description, t.due_date, t.status
-      FROM task AS t
-      LEFT JOIN project AS p ON t.project_id = p.id
-      WHERE p.id = ?`,
-    [req.params.id],
-    function (error, results, fields) {
-      if (error) throw error;
-
-      if (results.length > 0) {
-        Object.assign(data, { hasTasks: true });
-      }
-
-      const pending = results.filter((task) => task.status === "pending");
-      const ongoing = results.filter((task) => task.status === "ongoing");
-      const completed = results.filter((task) => task.status === "completed");
-
-      Object.assign(data.tasks, {
-        pending,
-        ongoing,
-        completed,
-      });
-    }
-  );
-
-  connection.query(
-    `SELECT m.id, m.name, m.contact_number
-      FROM member AS m
-      LEFT JOIN project_member AS pm ON m.id = pm.member_id
-      WHERE pm.project_id = ?`,
-    [req.params.id],
-    function (error, results, fields) {
-      if (error) throw error;
-      Object.assign(data.members, results);
-      res.render("project", data);
-    }
-  );
-});
-
 // GET MEMBERS FOR ADDING TO PROJECT
 router.get("/projects/:id/members", function (req, res, next) {
   connection.query(
@@ -373,6 +313,7 @@ router.delete("/members/:id", function (req, res, next) {
   );
 });
 
+// RENDER TASK PAGE
 router.get("/projects/:id/tasks", function (req, res, next) {
   const data = {
     project: {},
@@ -387,26 +328,26 @@ router.get("/projects/:id/tasks", function (req, res, next) {
     function (error, results, fields) {
       if (error) reject(error);
       Object.assign(data.project, results[0]);
-    }
-  );
 
-  connection.query(
-    `SELECT m.id, m.name, m.contact_number
+      connection.query(
+        `SELECT m.id, m.name, m.contact_number
        FROM member AS m
        LEFT JOIN project_member AS pm ON m.id = pm.member_id
        WHERE pm.project_id = ?`,
-    [req.params.id],
-    function (error, results, fields) {
-      if (error) reject(error);
-      Object.assign(data.members, results);
+        [req.params.id],
+        function (error, results, fields) {
+          if (error) reject(error);
+          Object.assign(data.members, results);
+
+          res.render("add-task", {
+            project: data.project,
+            members: data.members,
+            projectId: req.params.id,
+          });
+        }
+      );
     }
   );
-
-  res.render("add-task", {
-    project: data.project,
-    members: data.members,
-    projectId: req.params.id,
-  });
 });
 
 // ADD TASK

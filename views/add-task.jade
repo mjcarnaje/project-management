@@ -35,12 +35,12 @@ block content
           div
             button(type="submit").bg-green-400.px-6.py-2.rounded-lg.text-white.font-bold Add Task
 
- script.
+  script.
     var addedMembers = [];
     var availableMembers = `!{JSON.stringify(members)}`;
     var projectId = `#{projectId}`;
-
-    function setMemberOptions() {
+    
+    function setMemberOptions() {    
       const parsedAvailableMembers = JSON.parse(availableMembers);
       const filteredMembers = parsedAvailableMembers.filter(member => !addedMembers.find(dataMember => dataMember.id == member.id));
 
