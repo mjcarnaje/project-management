@@ -14,8 +14,19 @@ block content
         
         div.flex.flex-col.space-y-2
           label(for="name") Name:
-          input(type="text", id="name", name="name", placeholder="Name").border.border-gray-300.rounded-lg.px-4.py-2
+          input(type="text", id="name", name="name", placeholder="Name", required).border.border-gray-300.rounded-lg.px-4.py-2
 
+        div.flex.flex-col.space-y-2
+          label(for="name") Email:
+          input(type="email", id="email", name="email", placeholder="Email", required).border.border-gray-300.rounded-lg.px-4.py-2
+
+        div.flex.flex-col.space-y-2
+          label(for="gender") Gender:
+          select(name="gender", id="gender").border.border-gray-300.rounded-lg.px-4.py-1.flex-1
+            option(value="male").text-gray-400 Male
+            option(value="female").text-gray-400 Female
+            option(value="other").text-gray-400 Other
+            
         div.flex.flex-col.space-y-2
           label(for="description") Contact Number:
           input(type="text", id="name", name="contact_number", placeholder="Contact number").border.border-gray-300.rounded-lg.px-4.py-2

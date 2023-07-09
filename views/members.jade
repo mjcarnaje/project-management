@@ -9,16 +9,37 @@ block content
         a(href="/members").text-3xl.font-bold.text-orange-400="Members"
 
     div.w-full.px-8.bg-gray-50.py-12
-      a(href="/add-member").bg-orange-400.px-6.py-4.rounded-lg.text-white.font-bold Add Member
+      div.flex.justify-end.mb-4
+        a(href="/add-member").bg-orange-400.px-6.py-4.rounded-lg.text-white.font-bold Add Member
 
-      div.space-y-8.py-8
-        each member in members
-            div.p-4.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg.flex.justify-between.items-center
-              .flex.flex-col
-                a(href="/members/#{member.id}").text-2xl.font-bold.text-gray-800.text-orange-400 #{member.name}
-                p.text-gray-600 #{member.contact_number}
-              if member.projectName
-                  p.text-orange-400.font-bold.text-2xl #{member.projectName}
-              else
-                p.text-gray-400.text-xs.font-medium No project assigned
-                
+      div.flex.mb-4
+        form.flex.w-full.max-w-sm.space-x-3
+          input(type="text" name="search" id="search" placeholder="Search member" class="flex-1 appearance-none rounded-lg shadow p-3 text-grey-dark mr-2 focus:outline-none")
+          button(type="submit" class="flex-shrink-0 bg-orange-400 text-white text-sm py-3 px-4 rounded-lg" value="Search") Search
+      
+      div.flex.flex-col.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg
+        div.px-4.py-3
+          p.text-xl.font-bold.text-gray-800 Members (#{length})
+
+      div.space-y-8.py-4
+        if members.length  
+          each member in members
+              div.p-4.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg.flex.justify-between.items-center
+                div.flex.flex-col.gap-4
+                  a(href="/members/#{member.id}").text-2xl.font-bold.text-gray-800.text-orange-400 #{member.name}
+                  div.flex.flex-col.gap-2
+                    p.text-gray-600 Email: #{member.email}
+                    p.text-gray-600 Contact Number: #{member.contact_number}
+                if member.projectName
+                    p.text-orange-400.font-bold.text-2xl #{member.projectName}
+                else
+                  p.text-gray-400.text-xs.font-medium No project assigned
+        else
+          div.p-4.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg.flex.justify-between.items-center
+            div.flex.flex-col.gap-4
+              p.text-2xl.font-bold.text-gray-800.text-orange-400
+                if search
+                  | No members found for '#{search}'
+                else
+                  | No members found - Please add a member
+                  

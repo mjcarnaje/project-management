@@ -9,9 +9,20 @@ block content
         a(href="/members").text-3xl.font-bold.text-gray-800="Members"
         
     div.w-full.px-8.bg-gray-50.py-12
+      div.flex.justify-end.mb-4
         a(href="/add-project").bg-orange-400.px-6.py-4.rounded-lg.text-white.font-bold Add Project
-    
-        div.space-y-8.py-8
+
+      div.flex.mb-4
+        form.flex.w-full.max-w-sm.space-x-3
+          input(type="text" name="search" id="search" placeholder="Search project" class="flex-1 appearance-none rounded-lg shadow p-3 text-grey-dark mr-2 focus:outline-none")
+          button(type="submit" class="flex-shrink-0 bg-orange-400 text-white text-sm py-3 px-4 rounded-lg" value="Search") Search
+      
+      div.flex.flex-col.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg
+        div.px-4.py-3
+          p.text-xl.font-bold.text-gray-800 Projects (#{length})
+
+      div.space-y-8.py-4
+        if projects.length
           each project in projects
               div.p-4.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg.flex.justify-between.items-center
                 div.flex.flex-col
@@ -19,3 +30,11 @@ block content
                   p.text-gray-600 #{project.description || 'No description'}
                 div 
                   p.text-gray-400.text-xs.font-medium #{project.member_count} members
+        else
+          div.p-4.bg-white.shadow-sm.border-l-4.border-orange-400.rounded-lg.flex.justify-between.items-center
+            div.flex.flex-col.gap-4
+              p.text-2xl.font-bold.text-gray-800.text-orange-400
+                if search
+                  | No projects found for '#{search}'
+                else
+                  | No projects found - Please add a project

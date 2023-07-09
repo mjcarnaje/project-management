@@ -10,10 +10,16 @@ block content
 
     div.w-full.px-8.bg-gray-50.py-12.space-y-6
       div.bg-white.p-8.flex.justify-between.shadow-sm.rounded-lg
-        h1.text-3xl.font-bold.text-gray-800.text-orange-400 #{member.name}
-        div.flex.items-center.gap-4
-          a(href=`/edit-member/${member.id}`).bg-orange-400.px-6.py-3.rounded-lg.text-white.font-bold Edit
-          button(type="button", onclick=`deleteMember(${member.id})`).bg-red-400.px-6.py-3.rounded-lg.text-white.font-bold Delete
+        div.flex.items-center.justify-between.w-full.gap-4
+          div.flex.flex-col.gap-4
+            h1.text-3xl.font-bold.text-gray-800.text-orange-400 #{member.name}
+            div.flex.flex-col.gap-2
+              p.text-gray-600 Email: #{member.email}
+              p.text-gray-600 Contact Number: #{member.contact_number}
+              p.text-gray-600 Gender: #{member.gender.slice(0, 1).toUpperCase() + member.gender.slice(1)}
+          div.flex.gap-4
+            a(href=`/edit-member/${member.id}`).bg-orange-400.px-6.py-3.rounded-lg.text-white.font-bold Edit
+            button(type="button", onclick=`deleteMember(${member.id})`).bg-red-400.px-6.py-3.rounded-lg.text-white.font-bold Delete
 
       div.bg-white.p-8.flex.flex-col.justify-between.shadow-sm.rounded-lg.space-y-8
         h1.text-3xl.font-bold.text-gray-800.text-orange-400 Project: #{project.name}

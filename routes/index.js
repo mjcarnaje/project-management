@@ -5,17 +5,22 @@ var connection = require("../dbconnect");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
+  const search = req.query.search || "";
+
   connection.query(
     `SELECT p.id, p.name, p.description, COUNT(pm.member_id) AS member_count
       FROM project AS p
       LEFT JOIN project_member AS pm ON p.id = pm.project_id
+      WHERE p.name LIKE ?
       GROUP BY p.id, p.name;
-`,
+    `,
+    [`%${search}%`],
     function (error, results, fields) {
       if (error) throw error;
       res.render("index", {
-        title: "Projects",
         projects: results,
+        search,
+        length: results.length,
       });
     }
   );
@@ -187,16 +192,22 @@ router.delete("/delete-project/:id", function (req, res, next) {
 
 // MEMBERS PAGE
 router.get("/members", function (req, res, next) {
+  const search = req.query.search || "";
+
   connection.query(
-    `SELECT m.id, m.name, m.contact_number, p.name AS projectName
+    `SELECT m.*, p.name AS projectName
       FROM member AS m
       LEFT JOIN project_member AS pm ON m.id = pm.member_id
-      LEFT JOIN project AS p ON pm.project_id = p.id;`,
+      LEFT JOIN project AS p ON pm.project_id = p.id
+      WHERE m.name LIKE ?`,
+    [`%${search}%`],
     function (error, results, fields) {
       if (error) throw error;
 
       res.render("members", {
         members: results,
+        search,
+        length: results.length,
       });
     }
   );
@@ -210,8 +221,8 @@ router.get("/add-member", function (req, res, next) {
 // ADD MEMBER
 router.post("/add-member", function (req, res, next) {
   connection.query(
-    "INSERT INTO member (name, contact_number) VALUES (?, ?)",
-    [req.body.name, req.body.contact_number],
+    "INSERT INTO member (name, email, gender, contact_number) VALUES (?, ?, ?, ?)",
+    [req.body.name, req.body.email, req.body.gender, req.body.contact_number],
     function (error, results, fields) {
       if (error) throw error;
       res.redirect("/members");
@@ -236,8 +247,14 @@ router.get("/edit-member/:id", function (req, res, next) {
 // EDIT MEMBER
 router.post("/edit-member/:id", function (req, res, next) {
   connection.query(
-    "UPDATE member SET name = ?, contact_number = ? WHERE id = ?",
-    [req.body.name, req.body.contact_number, req.params.id],
+    "UPDATE member SET name = ?, email = ?, gender = ?,  contact_number = ? WHERE id = ?",
+    [
+      req.body.name,
+      req.body.email,
+      req.body.gender,
+      req.body.contact_number,
+      req.params.id,
+    ],
     function (error, results, fields) {
       if (error) throw error;
       res.redirect("/members");

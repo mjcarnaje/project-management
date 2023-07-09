@@ -17,6 +17,17 @@ block content
           input(type="text", id="name", name="name", placeholder="Name", value=member.name).border.border-gray-300.rounded-lg.px-4.py-2
 
         div.flex.flex-col.space-y-2
+          label(for="name") Email:
+          input(type="email", id="email", name="email", placeholder="Email", value=member.email, required).border.border-gray-300.rounded-lg.px-4.py-2
+
+        div.flex.flex-col.space-y-2
+          label(for="gender") Gender:
+          select(name="gender", id="gender").border.border-gray-300.rounded-lg.px-4.py-1.flex-1
+            option(value="male", selected=member.gender === 'male').text-gray-400 Male
+            option(value="female", selected=member.gender === 'female').text-gray-400 Female
+            option(value="other", selected=member.gender === 'other').text-gray-400 Other
+
+        div.flex.flex-col.space-y-2
           label(for="description") Contact Number:
           input(type="text", id="name", name="contact_number", placeholder="Contact number", value=member.contact_number).border.border-gray-300.rounded-lg.px-4.py-2
 

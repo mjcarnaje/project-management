@@ -25,9 +25,11 @@ connection.query(
 
 connection.query(
   `CREATE TABLE IF NOT EXISTS member (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255),
-  contact_number CHAR(11)
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   name VARCHAR(255),
+   email VARCHAR(255),
+   gender ENUM('male', 'female', 'other'),
+   contact_number CHAR(11)
 );`,
   function (error, results, fields) {
     if (error) throw error;
