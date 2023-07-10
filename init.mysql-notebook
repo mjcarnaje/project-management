@@ -1,0 +1,466 @@
+{
+    "type": "MySQLNotebook",
+    "version": "1.0",
+    "caption": "DB Notebook",
+    "content": "\\about\nDROP DATABASE project_management;\nCREATE DATABASE project_management;\nuse project_management;\n CREATE TABLE IF NOT EXISTS project (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  name VARCHAR(255),\n  description VARCHAR(255),\n  date_created DATE DEFAULT (CURRENT_DATE)\n);\nCREATE TABLE IF NOT EXISTS member (\n   id INT AUTO_INCREMENT PRIMARY KEY,\n   name VARCHAR(255),\n   email VARCHAR(255),\n   gender ENUM('male', 'female', 'other'),\n   contact_number CHAR(11)\n);\nCREATE TABLE IF NOT EXISTS project_member (\n  project_id INT,\n  member_id INT,\n  FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,\n  FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE,\n  PRIMARY KEY (project_id, member_id)\n);\nCREATE TABLE IF NOT EXISTS task (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  title VARCHAR(255),\n  description VARCHAR(255),\n  due_date DATE,\n  status ENUM('pending', 'ongoing', 'completed'),\n  project_id INT,\n  FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE\n);\nCREATE TABLE IF NOT EXISTS task_member (\n  task_id INT,\n  member_id INT,\n  FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE,\n  FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE,\n  PRIMARY KEY (task_id, member_id)\n);\n-- Insert sample data into the project table\nINSERT INTO project (name, description, date_created)\nVALUES\n  ('Project 1', 'Description for Project 1', '2023-01-01'),\n  ('Project 2', 'Description for Project 2', '2023-02-01'),\n  ('Project 3', 'Description for Project 3', '2023-03-01'),\n  ('Project 4', 'Description for Project 4', '2023-04-01'),\n  ('Project 5', 'Description for Project 5', '2023-05-01'),\n  ('Project 6', 'Description for Project 6', '2023-06-01'),\n  ('Project 7', 'Description for Project 7', '2023-07-01'),\n  ('Project 8', 'Description for Project 8', '2023-08-01'),\n  ('Project 9', 'Description for Project 9', '2023-09-01'),\n  ('Project 10', 'Description for Project 10', '2023-10-01');\n\n-- Insert sample data into the member table\nINSERT INTO member (name, email, gender, contact_number)\nVALUES\n  ('John Doe', 'john.doe@example.com', 'male', '1234567890'),\n  ('Jane Smith', 'jane.smith@example.com', 'female', '9876543210'),\n  ('Mike Johnson', 'mike.johnson@example.com', 'male', '5555555555'),\n  ('Emily Davis', 'emily.davis@example.com', 'female', '1111111111'),\n  ('Alex Brown', 'alex.brown@example.com', 'male', '9999999999'),\n  ('Sarah Wilson', 'sarah.wilson@example.com', 'female', '4444444444'),\n  ('Tom Thompson', 'tom.thompson@example.com', 'male', '7777777777'),\n  ('Olivia White', 'olivia.white@example.com', 'female', '2222222222'),\n  ('Michael Clark', 'michael.clark@example.com', 'male', '8888888888'),\n  ('Sophia Taylor', 'sophia.taylor@example.com', 'female', '6666666666'),\n  ('James Anderson', 'james.anderson@example.com', 'male', '3333333333'),\n  ('Emma Martin', 'emma.martin@example.com', 'female', '5555555555'),\n  ('William Harris', 'william.harris@example.com', 'male', '7777777777'),\n  ('Ava Thompson', 'ava.thompson@example.com', 'female', '9999999999'),\n  ('Daniel Wilson', 'daniel.wilson@example.com', 'male', '2222222222'),\n  ('Mia Johnson', 'mia.johnson@example.com', 'female', '4444444444'),\n  ('Alexander Davis', 'alexander.davis@example.com', 'male', '6666666666'),\n  ('Charlotte Brown', 'charlotte.brown@example.com', 'female', '8888888888'),\n  ('Benjamin Taylor', 'benjamin.taylor@example.com', 'male', '1111111111'),\n  ('Harper White', 'harper.white@example.com', 'female', '3333333333');\n\n-- Insert sample data into the project_member table\nINSERT INTO project_member (project_id, member_id)\nVALUES\n  (1, 1),\n  (1, 2),\n  (1, 3),\n  (1, 4),\n  (1, 5),\n  (2, 6),\n  (2, 7),\n  (2, 8),\n  (2, 9),\n  (2, 10),\n  (3, 11),\n  (3, 12),\n  (3, 13),\n  (3, 14),\n  (3, 15),\n  (4, 16),\n  (4, 17),\n  (4, 18),\n  (4, 19),\n  (4, 20);\n\n-- Insert sample data into the task table\nINSERT INTO task (title, description, due_date, status, project_id)\nVALUES\n  ('Task 1', 'Description for Task 1', '2023-01-10', 'pending', 1),\n  ('Task 2', 'Description for Task 2', '2023-02-15', 'ongoing', 1),\n  ('Task 3', 'Description for Task 3', '2023-03-20', 'completed', 1),\n  ('Task 4', 'Description for Task 4', '2023-04-05', 'pending', 2),\n  ('Task 5', 'Description for Task 5', '2023-05-15', 'ongoing', 2),\n  ('Task 6', 'Description for Task 6', '2023-06-30', 'completed', 2),\n  ('Task 7', 'Description for Task 7', '2023-07-10', 'pending', 3),\n  ('Task 8', 'Description for Task 8', '2023-08-20', 'ongoing', 3),\n  ('Task 9', 'Description for Task 9', '2023-09-05', 'completed', 3),\n  ('Task 10', 'Description for Task 10', '2023-10-15', 'pending', 4),\n  ('Task 11', 'Description for Task 11', '2023-11-30', 'ongoing', 4),\n  ('Task 12', 'Description for Task 12', '2023-12-10', 'completed', 4),\n  ('Task 13', 'Description for Task 13', '2023-01-20', 'pending', 5),\n  ('Task 14', 'Description for Task 14', '2023-02-28', 'ongoing', 5),\n  ('Task 15', 'Description for Task 15', '2023-03-15', 'completed', 5),\n  ('Task 16', 'Description for Task 16', '2023-04-25', 'pending', 6),\n  ('Task 17', 'Description for Task 17', '2023-05-10', 'ongoing', 6),\n  ('Task 18', 'Description for Task 18', '2023-06-20', 'completed', 6),\n  ('Task 19', 'Description for Task 19', '2023-07-05', 'pending', 7),\n  ('Task 20', 'Description for Task 20', '2023-08-15', 'ongoing', 7);\n\n-- Insert sample data into the task_member table\nINSERT INTO task_member (task_id, member_id)\nVALUES\n  (1, 1),\n  (1, 2),\n  (2, 3),\n  (2, 4),\n  (3, 5),\n  (4, 6),\n  (4, 7),\n  (5, 8),\n  (5, 9),\n  (6, 10),\n  (7, 11),\n  (8, 12),\n  (8, 13),\n  (9, 14),\n  (9, 15),\n  (10, 16),\n  (10, 17),\n  (11, 18),\n  (12, 19),\n  (12, 20),\n  (13, 1),\n  (14, 2),\n  (15, 3),\n  (15, 4),\n  (16, 5),\n  (17, 6),\n  (18, 7),\n  (18, 8),\n  (19, 9),\n  (20, 10);\n\n",
+    "options": {
+        "tabSize": 4,
+        "indentSize": 4,
+        "insertSpaces": true,
+        "defaultEOL": "LF",
+        "trimAutoWhitespace": true
+    },
+    "viewState": {
+        "cursorState": [
+            {
+                "inSelectionMode": false,
+                "selectionStart": {
+                    "lineNumber": 161,
+                    "column": 1
+                },
+                "position": {
+                    "lineNumber": 161,
+                    "column": 1
+                }
+            }
+        ],
+        "viewState": {
+            "scrollLeft": 0,
+            "firstPosition": {
+                "lineNumber": 1,
+                "column": 1
+            },
+            "firstPositionDeltaTop": 0
+        },
+        "contributionsState": {
+            "editor.contrib.folding": {},
+            "editor.contrib.wordHighlighter": false
+        }
+    },
+    "contexts": [
+        {
+            "state": {
+                "start": 1,
+                "end": 1,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 2,
+                            "content": "Welcome to the MySQL Shell - DB Notebook.\n\nPress Ctrl+Enter to execute the current statement.\n\nExecute \\sql to switch to SQL, \\js to JavaScript and \\ts to TypeScript mode.\nExecute \\help or \\? for help;",
+                            "language": "ansi"
+                        }
+                    ]
+                },
+                "currentHeight": 128,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 6
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 2,
+                "end": 2,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "b52221c0-bfd0-4bd2-ced2-8c021e2d472d",
+                            "content": "OK, 0 records retrieved in 51.001ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 33
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 3,
+                "end": 3,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "674844ef-f70a-4fb4-9272-ff3e9707f614",
+                            "content": "OK, 0 records retrieved in 7.984ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 35
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 4,
+                "end": 4,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "7024d98c-0076-4aeb-b378-ff8eaeb2a4f1",
+                            "content": "OK, 0 records retrieved in 6.008ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 23
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 5,
+                "end": 40,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "809a6afe-a8f1-4ec9-e1ca-c5393357adad",
+                            "content": "OK, 0 records retrieved in 13.233ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 1,
+                            "resultId": "8467805e-7775-4d97-e8d5-face504b5c2e",
+                            "content": "OK, 0 records retrieved in 8.277ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 2,
+                            "resultId": "545a12e3-f851-43f6-e885-ca4a69aad88c",
+                            "content": "OK, 0 records retrieved in 26.971ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 3,
+                            "resultId": "f6c47cbf-dad0-4cec-e89b-ff241c4a3e26",
+                            "content": "OK, 0 records retrieved in 19.341ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 4,
+                            "resultId": "6bd9f327-ad9b-495d-a98f-30484a1a42e2",
+                            "content": "OK, 0 records retrieved in 30.89ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 169
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 169,
+                            "length": 192
+                        },
+                        "contentStart": 170,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 361,
+                            "length": 256
+                        },
+                        "contentStart": 362,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 617,
+                            "length": 277
+                        },
+                        "contentStart": 618,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 894,
+                            "length": 241
+                        },
+                        "contentStart": 895,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 41,
+                "end": 54,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "c5f782e9-991a-419a-bf89-f8ca6985679c",
+                            "content": "OK, 0 records retrieved in 8.708ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 707
+                        },
+                        "contentStart": 45,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 707,
+                            "length": 1
+                        },
+                        "contentStart": 706,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 55,
+                "end": 78,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "23509244-837b-427d-fc51-3be38fc13786",
+                            "content": "OK, 0 records retrieved in 7.246ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 1537
+                        },
+                        "contentStart": 44,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1537,
+                            "length": 1
+                        },
+                        "contentStart": 1536,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 79,
+                "end": 102,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "b2208553-3e9d-4b4e-c642-6cf00fbc5afd",
+                            "content": "OK, 0 records retrieved in 7.044ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 320
+                        },
+                        "contentStart": 52,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 320,
+                            "length": 1
+                        },
+                        "contentStart": 319,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 103,
+                "end": 126,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "bbc59fe7-edb4-45d1-c20a-b23321237411",
+                            "content": "OK, 0 records retrieved in 6.742ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 1510
+                        },
+                        "contentStart": 42,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1510,
+                            "length": 1
+                        },
+                        "contentStart": 1509,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 127,
+                "end": 160,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "31b72cd1-12b6-426c-da1b-408941d39e0a",
+                            "content": "OK, 0 records retrieved in 7.514ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 427
+                        },
+                        "contentStart": 49,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 427,
+                            "length": 1
+                        },
+                        "contentStart": 426,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 161,
+                "end": 161,
+                "language": "mysql",
+                "currentHeight": 180,
+                "statements": []
+            },
+            "data": []
+        }
+    ]
+}
