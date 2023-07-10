@@ -62,7 +62,7 @@ connection.query(
   due_date DATE,
   status ENUM('pending', 'ongoing', 'completed'),
   project_id INT,
-  FOREIGN KEY (project_id) REFERENCES project(id)
+  FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
 );
   `,
   function (error, results, fields) {

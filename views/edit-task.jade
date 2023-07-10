@@ -133,7 +133,9 @@ block content
 
     function renderAddedMembers() {
       const membersDiv = document.querySelector('.members-container');
-      membersDiv.innerHTML = ''; // Clear the existing member list
+      
+      if (addedMembers.length !== 0)
+        membersDiv.innerHTML = ''; // Clear the existing member list
 
       for (const member of addedMembers) {
         const memberDiv = document.createElement('div');
